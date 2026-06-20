@@ -53,8 +53,6 @@ public class dashboard extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        pnlClose = new javax.swing.JPanel();
-        lblClose = new javax.swing.JLabel();
         pnlSideBar = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         btnDasbor = new javax.swing.JButton();
@@ -194,20 +192,6 @@ public class dashboard extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        pnlClose.setMinimumSize(new java.awt.Dimension(0, 30));
-        pnlClose.setLayout(new java.awt.BorderLayout());
-
-        lblClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-black-close-20.png"))); // NOI18N
-        lblClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblClose.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblCloseMouseClicked(evt);
-            }
-        });
-        pnlClose.add(lblClose, java.awt.BorderLayout.LINE_END);
-
-        getContentPane().add(pnlClose, java.awt.BorderLayout.PAGE_START);
 
         pnlSideBar.setBackground(new java.awt.Color(153, 204, 255));
         pnlSideBar.setMinimumSize(new java.awt.Dimension(200, 100));
@@ -1514,11 +1498,6 @@ public class dashboard extends javax.swing.JFrame {
         pindahKartu("cardAbout");
     }//GEN-LAST:event_btnAboutActionPerformed
 
-    private void lblCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCloseMouseClicked
-        // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_lblCloseMouseClicked
-
     /**
      * @param args the command line arguments
      */
@@ -1630,9 +1609,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel kontenGuru;
     private javax.swing.JPanel kontenKelas;
     private javax.swing.JPanel kontenSiswa;
-    private javax.swing.JLabel lblClose;
     private javax.swing.JPanel pnlBawahSiswa;
-    private javax.swing.JPanel pnlClose;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JPanel pnlFotoSiswa;
     private javax.swing.JPanel pnlInput;
