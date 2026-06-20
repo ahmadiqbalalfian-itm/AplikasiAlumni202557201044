@@ -6,6 +6,7 @@ package uialumni;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -1410,8 +1411,22 @@ public class dashboard extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        dispose();
-        new frameLogin().setVisible(true);
+        int pilihan =JOptionPane.showConfirmDialog(null,
+                "Apakah Anda yakin ingin keluar?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION);
+        
+        switch (pilihan){
+            case JOptionPane.YES_OPTION:
+                dispose();
+                new frameLogin().setVisible(true);
+                break;
+            case JOptionPane.NO_OPTION:
+                break;
+            default:
+                break;
+        }
+        
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnTambahJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahJurusanActionPerformed
