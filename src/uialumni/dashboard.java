@@ -4,7 +4,10 @@
  */
 package uialumni;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -1507,7 +1510,15 @@ public class dashboard extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-//        UIM
+        try {
+            UIManager.put("Button.arc", 15);
+            UIManager.put("TextComponent.arc", 15);
+            UIManager.put("Button.borderWidth", 0);
+            UIManager.put("Component.borderWidth", 0);
+            UIManager.put("Component.focusWidth", 0);
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+        }
         //</editor-fold>
         
         /* Create and display the form */
