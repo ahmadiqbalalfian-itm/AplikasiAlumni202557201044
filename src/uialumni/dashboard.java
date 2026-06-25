@@ -6,9 +6,18 @@ package uialumni;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+//jurusan
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -22,25 +31,68 @@ public class dashboard extends javax.swing.JFrame {
     public dashboard() {
         initComponents();
         reset();
+        
+        //jurusan
+        load_tabel_jurusan();
     }
     void reset(){
+        //card jurusan
         tKodeJurusan.setText(null);
+        tKodeJurusan.setEditable(true);
         tNamaJurusan.setText(null);
         
+        //card guru
         tNamaGuru.setText(null);
         tNIP.setText(null);
         tAlamatGuru.setText(null);
         
+        //cardKelas
         tKodeKelas.setText(null);
         tNamaKelas.setText(null);
         
+        //card siswa
         tNIS.setText(null);
         tNamaSiswa.setText(null);
         tAlamatSiswa.setText(null);
         tNomorHPSiswa.setText(null);
-        tTanggalLahirSiswa.setText(null);
         tTempatLahirSiswa.setText(null);
     }
+    
+    void load_tabel_jurusan(){
+        
+        DefaultTableModel model = new DefaultTableModel();
+        
+        model.addColumn("Kode Jurusan");
+        
+        model.addColumn("Nama Jurusan");
+        
+        String sql = "SELECT * FROM jurusan";
+        
+        try {
+            Connection con = koneksi.konek();
+            
+            Statement st = con.createStatement();
+            
+            ResultSet rs = st.executeQuery(sql);
+            
+            
+            while (rs.next()) {
+                
+                String kodeJurusan = rs.getString("kode_jur");
+                
+                String namaJurusan = rs.getString("nama_jurusan");
+                
+                Object[] baris = {kodeJurusan, namaJurusan};
+                model.addRow(baris);
+            }
+            
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal mengambil data!");
+        }
+        tblDataJurusan.setModel(model);
+    }  
+    
+    
     
     private void pindahKartu(String namaKartu){
         CardLayout cl = (CardLayout) pnlContent.getLayout();
@@ -101,8 +153,8 @@ public class dashboard extends javax.swing.JFrame {
         btnUbahJurusan = new javax.swing.JButton();
         btnHapusJurusan = new javax.swing.JButton();
         btnResetJurusan = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        scrlDataJurusan = new javax.swing.JScrollPane();
+        tblDataJurusan = new javax.swing.JTable();
         cardGuru = new javax.swing.JPanel();
         atasGuru = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -161,10 +213,10 @@ public class dashboard extends javax.swing.JFrame {
         tNamaSiswa = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         cJenisKelaminSiswa = new javax.swing.JComboBox<>();
-        tTanggalLahirSiswa = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
         tTempatLahirSiswa = new javax.swing.JTextField();
         jLabel28 = new javax.swing.JLabel();
+        tTanggalLahirSiswa = new com.toedter.calendar.JDateChooser();
         pnlInputSiswa2 = new javax.swing.JPanel();
         tNomorHPSiswa = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
@@ -345,7 +397,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(btnAbout)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogout)
-                .addGap(0, 344, Short.MAX_VALUE))
+                .addGap(0, 368, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnlSideBar, java.awt.BorderLayout.LINE_START);
@@ -357,7 +409,7 @@ public class dashboard extends javax.swing.JFrame {
         cardDasbor.setLayout(new java.awt.BorderLayout());
 
         bawah.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 20));
-        bawah.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5));
+        bawah.setLayout(new java.awt.GridLayout(2, 1));
 
         Jurusan.setLayout(new java.awt.BorderLayout());
 
@@ -373,7 +425,7 @@ public class dashboard extends javax.swing.JFrame {
         titleJurusan.setLayout(titleJurusanLayout);
         titleJurusanLayout.setHorizontalGroup(
             titleJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tTittle1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tTittle1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         titleJurusanLayout.setVerticalGroup(
             titleJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,11 +444,11 @@ public class dashboard extends javax.swing.JFrame {
         AngkaJurusan.setLayout(AngkaJurusanLayout);
         AngkaJurusanLayout.setHorizontalGroup(
             AngkaJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahJurusan, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tJumlahJurusan, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         AngkaJurusanLayout.setVerticalGroup(
             AngkaJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahJurusan, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tJumlahJurusan, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
 
         Jurusan.add(AngkaJurusan, java.awt.BorderLayout.CENTER);
@@ -417,7 +469,7 @@ public class dashboard extends javax.swing.JFrame {
         titleGuru.setLayout(titleGuruLayout);
         titleGuruLayout.setHorizontalGroup(
             titleGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tTittle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tTittle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         titleGuruLayout.setVerticalGroup(
             titleGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -436,11 +488,11 @@ public class dashboard extends javax.swing.JFrame {
         angkaGuru.setLayout(angkaGuruLayout);
         angkaGuruLayout.setHorizontalGroup(
             angkaGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahGuru, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tJumlahGuru, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         angkaGuruLayout.setVerticalGroup(
             angkaGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahGuru, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tJumlahGuru, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
 
         Guru.add(angkaGuru, java.awt.BorderLayout.CENTER);
@@ -461,7 +513,7 @@ public class dashboard extends javax.swing.JFrame {
         tittleSiswa.setLayout(tittleSiswaLayout);
         tittleSiswaLayout.setHorizontalGroup(
             tittleSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tTittle2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tTittle2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         tittleSiswaLayout.setVerticalGroup(
             tittleSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,11 +532,11 @@ public class dashboard extends javax.swing.JFrame {
         angkaSiswa.setLayout(angkaSiswaLayout);
         angkaSiswaLayout.setHorizontalGroup(
             angkaSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tJumlahSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         angkaSiswaLayout.setVerticalGroup(
             angkaSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tJumlahSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
 
         Siswa.add(angkaSiswa, java.awt.BorderLayout.CENTER);
@@ -505,7 +557,7 @@ public class dashboard extends javax.swing.JFrame {
         titleKelas.setLayout(titleKelasLayout);
         titleKelasLayout.setHorizontalGroup(
             titleKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tTittle3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tTittle3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         titleKelasLayout.setVerticalGroup(
             titleKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,11 +576,11 @@ public class dashboard extends javax.swing.JFrame {
         angkaKelas.setLayout(angkaKelasLayout);
         angkaKelasLayout.setHorizontalGroup(
             angkaKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(tJumlahKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         angkaKelasLayout.setVerticalGroup(
             angkaKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tJumlahKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tJumlahKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
 
         Kelas.add(angkaKelas, java.awt.BorderLayout.CENTER);
@@ -537,7 +589,7 @@ public class dashboard extends javax.swing.JFrame {
 
         cardDasbor.add(bawah, java.awt.BorderLayout.CENTER);
 
-        pnlContent.add(cardDasbor, "CardDasbor");
+        pnlContent.add(cardDasbor, "cardDasbor");
 
         cardJurusan.setBackground(new java.awt.Color(255, 255, 255));
         cardJurusan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 20));
@@ -584,6 +636,11 @@ public class dashboard extends javax.swing.JFrame {
         btnUbahJurusan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-white-edit-20.png"))); // NOI18N
         btnUbahJurusan.setText("Ubah");
         btnUbahJurusan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUbahJurusan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahJurusanActionPerformed(evt);
+            }
+        });
 
         btnHapusJurusan.setBackground(new java.awt.Color(255, 0, 0));
         btnHapusJurusan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -591,6 +648,11 @@ public class dashboard extends javax.swing.JFrame {
         btnHapusJurusan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-remove-20.png"))); // NOI18N
         btnHapusJurusan.setText("Hapus");
         btnHapusJurusan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnHapusJurusan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusJurusanActionPerformed(evt);
+            }
+        });
 
         btnResetJurusan.setBackground(new java.awt.Color(51, 102, 255));
         btnResetJurusan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -604,7 +666,7 @@ public class dashboard extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDataJurusan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -615,7 +677,12 @@ public class dashboard extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblDataJurusan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDataJurusanMouseClicked(evt);
+            }
+        });
+        scrlDataJurusan.setViewportView(tblDataJurusan);
 
         javax.swing.GroupLayout bawahJurusanLayout = new javax.swing.GroupLayout(bawahJurusan);
         bawahJurusan.setLayout(bawahJurusanLayout);
@@ -625,7 +692,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(bawahJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bawahJurusanLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addComponent(scrlDataJurusan)
                         .addContainerGap())
                     .addGroup(bawahJurusanLayout.createSequentialGroup()
                         .addGroup(bawahJurusanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -668,8 +735,8 @@ public class dashboard extends javax.swing.JFrame {
                     .addComponent(btnHapusJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnResetJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addComponent(scrlDataJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         cardJurusan.add(bawahJurusan, java.awt.BorderLayout.CENTER);
@@ -956,7 +1023,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cWaliKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         kontenKelas.add(pnlInputKelas);
@@ -986,8 +1053,8 @@ public class dashboard extends javax.swing.JFrame {
         pnlOutputKelasLayout.setVerticalGroup(
             pnlOutputKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutputKelasLayout.createSequentialGroup()
-                .addContainerGap(88, Short.MAX_VALUE)
-                .addComponent(scrlDataKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(scrlDataKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1055,6 +1122,8 @@ public class dashboard extends javax.swing.JFrame {
 
         cardSiswa.add(atasSiswa, java.awt.BorderLayout.PAGE_START);
 
+        kontenSiswa.setMaximumSize(new java.awt.Dimension(797, 346));
+        kontenSiswa.setPreferredSize(new java.awt.Dimension(797, 346));
         kontenSiswa.setLayout(new javax.swing.BoxLayout(kontenSiswa, javax.swing.BoxLayout.LINE_AXIS));
 
         tFotoSiswa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1063,23 +1132,7 @@ public class dashboard extends javax.swing.JFrame {
         tFotoSiswa.setMaximumSize(new java.awt.Dimension(150, 200));
         tFotoSiswa.setMinimumSize(new java.awt.Dimension(150, 200));
         tFotoSiswa.setPreferredSize(new java.awt.Dimension(150, 200));
-
-        javax.swing.GroupLayout pnlFotoSiswaLayout = new javax.swing.GroupLayout(pnlFotoSiswa);
-        pnlFotoSiswa.setLayout(pnlFotoSiswaLayout);
-        pnlFotoSiswaLayout.setHorizontalGroup(
-            pnlFotoSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlFotoSiswaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tFotoSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnlFotoSiswaLayout.setVerticalGroup(
-            pnlFotoSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFotoSiswaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tFotoSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        pnlFotoSiswa.add(tFotoSiswa);
 
         kontenSiswa.add(pnlFotoSiswa);
 
@@ -1103,18 +1156,6 @@ public class dashboard extends javax.swing.JFrame {
 
         cJenisKelaminSiswa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "11", "12" }));
 
-        tTanggalLahirSiswa.setText("jTextField1");
-        tTanggalLahirSiswa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tTanggalLahirSiswaActionPerformed(evt);
-            }
-        });
-        tTanggalLahirSiswa.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                tTanggalLahirSiswaKeyTyped(evt);
-            }
-        });
-
         jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel27.setText("Tanggal Lahir");
 
@@ -1122,6 +1163,8 @@ public class dashboard extends javax.swing.JFrame {
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel28.setText("Tempat Lahir");
+
+        tTanggalLahirSiswa.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout pnlInputSiswa1Layout = new javax.swing.GroupLayout(pnlInputSiswa1);
         pnlInputSiswa1.setLayout(pnlInputSiswa1Layout);
@@ -1134,12 +1177,12 @@ public class dashboard extends javax.swing.JFrame {
                     .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tNamaSiswa)
-                    .addComponent(tTanggalLahirSiswa)
-                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                     .addComponent(cJenisKelaminSiswa, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tTempatLahirSiswa)
-                    .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tTanggalLahirSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlInputSiswa1Layout.setVerticalGroup(
@@ -1164,8 +1207,8 @@ public class dashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tTanggalLahirSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addComponent(tTanggalLahirSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         kontenSiswa.add(pnlInputSiswa1);
@@ -1206,7 +1249,7 @@ public class dashboard extends javax.swing.JFrame {
                     .addComponent(tNomorHPSiswa, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlInputSiswa2Layout.createSequentialGroup()
-                        .addComponent(jLabel31, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                        .addComponent(jLabel31, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                         .addGap(216, 216, 216))
                     .addComponent(cKelasSiswa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1226,7 +1269,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel31)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrAlamatSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(scrAlamatSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1279,7 +1322,7 @@ public class dashboard extends javax.swing.JFrame {
         });
         tombolSiswa.add(btnResetSiswa);
 
-        pnlOutputSiswa.setLayout(new javax.swing.BoxLayout(pnlOutputSiswa, javax.swing.BoxLayout.LINE_AXIS));
+        pnlOutputSiswa.setLayout(new java.awt.GridLayout(1, 0));
 
         tblDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1292,6 +1335,7 @@ public class dashboard extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblDataSiswa.setShowGrid(false);
         scrDataSiswa.setViewportView(tblDataSiswa);
 
         pnlOutputSiswa.add(scrDataSiswa);
@@ -1396,7 +1440,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addGroup(bawahJurusan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel33)
                     .addComponent(jLabel32))
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addContainerGap(430, Short.MAX_VALUE))
         );
 
         cardAbout.add(bawahJurusan1, java.awt.BorderLayout.CENTER);
@@ -1431,11 +1475,35 @@ public class dashboard extends javax.swing.JFrame {
 
     private void btnTambahJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahJurusanActionPerformed
         // TODO add your handling code here:
+        String kodeJurusan = tKodeJurusan.getText();
+        
+        String namaJurusan = tNamaJurusan.getText();
+        
+        String sql = "INSERT INTO jurusan(kode_jur, nama_jurusan) VALUES (?,?)";
+        
+        
+        try {
+            Connection con = koneksi.konek();
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, kodeJurusan);
+            
+            ps.setString(2, namaJurusan);
+            
+            ps.execute();
+            
+            JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
+        } catch (SQLException sQLException) {
+            
+            JOptionPane.showMessageDialog(null, "Data gagal disimpan!");
+        }
+        
+        load_tabel_jurusan();
+        
+        reset();
+        
     }//GEN-LAST:event_btnTambahJurusanActionPerformed
-
-    private void tTanggalLahirSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tTanggalLahirSiswaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tTanggalLahirSiswaActionPerformed
 
     private void btnResetJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetJurusanActionPerformed
         // TODO add your handling code here:
@@ -1480,12 +1548,6 @@ public class dashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tNISKeyTyped
 
-    private void tTanggalLahirSiswaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tTanggalLahirSiswaKeyTyped
-        // TODO add your handling code here:
-        char huruf = evt.getKeyChar();
-        if(!Character.isDigit(huruf)&& huruf!='-'){evt.consume();}
-    }//GEN-LAST:event_tTanggalLahirSiswaKeyTyped
-
     private void btnDasborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDasborActionPerformed
         // TODO add your handling code here:
         pindahKartu("cardDasbor");
@@ -1515,6 +1577,79 @@ public class dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         pindahKartu("cardAbout");
     }//GEN-LAST:event_btnAboutActionPerformed
+
+    private void tblDataJurusanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataJurusanMouseClicked
+        // TODO add your handling code here:
+        int barisYangDipilih = tblDataJurusan.rowAtPoint(evt.getPoint());
+        
+        String kodeJurusan = tblDataJurusan.getValueAt(barisYangDipilih, 0).toString();
+        
+        String namaJurusan = tblDataJurusan.getValueAt(barisYangDipilih, 1).toString();
+        
+        tKodeJurusan.setText(kodeJurusan);
+        
+        tKodeJurusan.setEditable(false);
+        
+        tNamaJurusan.setText(namaJurusan);
+    }//GEN-LAST:event_tblDataJurusanMouseClicked
+
+    private void btnUbahJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahJurusanActionPerformed
+        // TODO add your handling code here:
+        String kodeJurusan = tKodeJurusan.getText();
+        
+        String namaJurusan = tNamaJurusan.getText();
+        
+        String sql = "UPDATE jurusan SET nama_jurusan=? WHERE kode_jur=?";
+        
+        
+        try {
+            Connection con = koneksi.konek();
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, namaJurusan);
+            
+            ps.setString(2, kodeJurusan);
+            
+            ps.execute();
+            
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah!");
+        } catch (SQLException sQLException) {
+            
+            JOptionPane.showMessageDialog(null, "Data gagal diubah!");
+        }
+        
+        load_tabel_jurusan();
+        
+        reset();
+    }//GEN-LAST:event_btnUbahJurusanActionPerformed
+
+    private void btnHapusJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusJurusanActionPerformed
+        // TODO add your handling code here:
+        String kodeJurusan = tKodeJurusan.getText();
+        
+        String sql = "DELETE FROM jurusan WHERE kode_jur=?";
+        
+        
+        try {
+            Connection con = koneksi.konek();
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, kodeJurusan);
+            
+            ps.execute();
+            
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+        } catch (SQLException sQLException) {
+            
+            JOptionPane.showMessageDialog(null, "Data gagal dihapus!");
+        }
+        
+        load_tabel_jurusan();
+        
+        reset();
+    }//GEN-LAST:event_btnHapusJurusanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1629,9 +1764,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JPanel kontenGuru;
     private javax.swing.JPanel kontenKelas;
     private javax.swing.JPanel kontenSiswa;
@@ -1649,6 +1782,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrAlamatSiswa;
     private javax.swing.JScrollPane scrDataSiswa;
     private javax.swing.JScrollPane scrlDataGuru;
+    private javax.swing.JScrollPane scrlDataJurusan;
     private javax.swing.JScrollPane scrlDataKelas;
     private javax.swing.JTextArea tAlamatGuru;
     private javax.swing.JTextArea tAlamatSiswa;
@@ -1666,13 +1800,14 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JTextField tNamaKelas;
     private javax.swing.JTextField tNamaSiswa;
     private javax.swing.JTextField tNomorHPSiswa;
-    private javax.swing.JTextField tTanggalLahirSiswa;
+    private com.toedter.calendar.JDateChooser tTanggalLahirSiswa;
     private javax.swing.JTextField tTempatLahirSiswa;
     private javax.swing.JLabel tTittle;
     private javax.swing.JLabel tTittle1;
     private javax.swing.JLabel tTittle2;
     private javax.swing.JLabel tTittle3;
     private javax.swing.JTable tblDataGuru;
+    private javax.swing.JTable tblDataJurusan;
     private javax.swing.JTable tblDataKelas;
     private javax.swing.JTable tblDataSiswa;
     private javax.swing.JPanel titleGuru;
