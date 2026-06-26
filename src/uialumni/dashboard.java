@@ -1911,17 +1911,6 @@ public class dashboard extends javax.swing.JFrame {
                 jkGuru = null;
         }
 
-        switch (jenisKelaminGuru) {
-            case "Laki-Laki":
-                jkGuru = "L";
-                break;
-            case "Perempuan":
-                jkGuru = "P";
-                break;
-            default:
-                jkGuru = null;
-        }
-
         try {
             String sql = "INSERT INTO guru(nip, nama_guru, gender, alamat) VALUES (?,?,?,?)";
 
