@@ -24,7 +24,6 @@ import javax.swing.JFileChooser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 /**
  *
  * @author ACER
@@ -42,10 +41,13 @@ public class dashboard extends javax.swing.JFrame {
         load_tabel_jurusan();
 
         load_tabel_guru();
-        
+
         load_tabel_kelas();
         comboJurusan();
         comboWali();
+
+        load_tabel_siswa();
+        comboKelas();
     }
 
     void reset() {
@@ -58,10 +60,14 @@ public class dashboard extends javax.swing.JFrame {
         tNamaGuru.setText(null);
         tNIP.setText(null);
         tAlamatGuru.setText(null);
+        cJenisKelaminGuru.setSelectedItem(null);
 
         //cardKelas
         tKodeKelas.setText(null);
         tNamaKelas.setText(null);
+        cJurusanKelas.setSelectedItem(null);
+        cTingkatanKelas.setSelectedItem(null);
+        cWaliKelas.setSelectedItem(null);
 
         //card siswa
         tNIS.setText(null);
@@ -69,7 +75,14 @@ public class dashboard extends javax.swing.JFrame {
         tAlamatSiswa.setText(null);
         tNomorHPSiswa.setText(null);
         tTempatLahirSiswa.setText(null);
+        tTanggalLahirSiswa.setCalendar(null);
+
+        cJenisKelaminSiswa.setSelectedItem(null);
+        cKelasSiswa.setSelectedItem(null);
+
+        tFotoSiswa.setText("Foto");
         tFotoPath.setText(null);
+        tFotoPath.setIcon(null);
     }
 
     void load_tabel_jurusan() {
@@ -141,25 +154,24 @@ public class dashboard extends javax.swing.JFrame {
         }
         tblDataGuru.setModel(model);
     }
-    
-    void load_tabel_kelas() {
 
+    void load_tabel_kelas() {
         DefaultTableModel model = new DefaultTableModel();
 
         model.addColumn("Kode Kelas");
 
         model.addColumn("Nama Kelas");
-        
+
         model.addColumn("Tingkatan");
 
         model.addColumn("Jurusan");
-        
+
         model.addColumn("Wali Kelas");
 
         String sql = "SELECT k.id_kelas,k.nama_kelas,k.tingkatan,j.nama_jur,g.nama_guru "
-                +" FROM kelas k "
-                +" LEFT JOIN jurusan j ON k.kode_jur=j.kode_jur "
-                +" LEFT JOIN guru g ON k.nip_wali_kelas=g.nip";
+                + " FROM kelas k "
+                + " LEFT JOIN jurusan j ON k.kode_jur=j.kode_jur "
+                + " LEFT JOIN guru g ON k.nip_wali_kelas=g.nip";
 
         try {
             Connection con = koneksi.konek();
@@ -175,7 +187,7 @@ public class dashboard extends javax.swing.JFrame {
                 String tingkatan = rs.getString("tingkatan");
                 String jurusan = rs.getString("nama_jur");
                 String waliKelas = rs.getString("nama_guru");
-                
+
                 Object[] baris = {kodeKelas, namaKelas, tingkatan, jurusan, waliKelas};
                 model.addRow(baris);
             }
@@ -184,6 +196,52 @@ public class dashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Gagal mengambil data!");
         }
         tblDataKelas.setModel(model);
+    }
+
+    void load_tabel_siswa() {
+        DefaultTableModel model = new DefaultTableModel();
+
+        model.addColumn("NIS");
+
+        model.addColumn("Nama Siswa");
+
+        model.addColumn("L/P");
+
+        model.addColumn("Tempat Lahir");
+
+        model.addColumn("Tgl Lahir");
+
+        model.addColumn("Kelas");
+
+        model.addColumn("HP");
+
+        String sql = "SELECT * FROM siswa";
+
+        try {
+            Connection con = koneksi.konek();
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+
+                String nis = rs.getString("nis");
+                String namaSiswa = rs.getString("nama_siswa");
+                String jenisKelamin = rs.getString("gender");
+                String tempatLahir = rs.getString("tempat_lahir");
+                String tglLahir = rs.getString("tgl_lahir");
+                String kelas = rs.getString("id_kelas");
+                String hp = rs.getString("no_hp");
+
+                Object[] baris = {nis, namaSiswa, jenisKelamin, tempatLahir, tglLahir, kelas, hp};
+                model.addRow(baris);
+            }
+
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal mengambil data!");
+        }
+        tblDataSiswa.setModel(model);
     }
 
     private void pindahKartu(String namaKartu) {
@@ -1106,16 +1164,16 @@ public class dashboard extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInputKelasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlInputKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cTingkatanKelas, 0, 328, Short.MAX_VALUE)
+                    .addComponent(cTingkatanKelas, 0, 334, Short.MAX_VALUE)
                     .addComponent(tKodeKelas, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tNamaKelas, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cJurusanKelas, 0, 328, Short.MAX_VALUE)
+                    .addComponent(cJurusanKelas, 0, 334, Short.MAX_VALUE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cWaliKelas, 0, 328, Short.MAX_VALUE))
+                    .addComponent(cWaliKelas, 0, 334, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlInputKelasLayout.setVerticalGroup(
@@ -1141,7 +1199,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cWaliKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         kontenKelas.add(pnlInputKelas);
@@ -1177,7 +1235,7 @@ public class dashboard extends javax.swing.JFrame {
             pnlOutputKelasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutputKelasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrlDataKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(scrlDataKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1270,6 +1328,11 @@ public class dashboard extends javax.swing.JFrame {
         tFotoSiswa.setMaximumSize(new java.awt.Dimension(150, 200));
         tFotoSiswa.setMinimumSize(new java.awt.Dimension(150, 200));
         tFotoSiswa.setPreferredSize(new java.awt.Dimension(150, 200));
+        tFotoSiswa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tFotoSiswaMouseClicked(evt);
+            }
+        });
         pnlFotoSiswa.add(tFotoSiswa);
 
         kontenSiswa.add(pnlFotoSiswa);
@@ -1315,7 +1378,7 @@ public class dashboard extends javax.swing.JFrame {
                     .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tNamaSiswa)
-                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
                     .addComponent(cJenisKelaminSiswa, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tTempatLahirSiswa)
@@ -1346,7 +1409,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tTanggalLahirSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         kontenSiswa.add(pnlInputSiswa1);
@@ -1477,6 +1540,11 @@ public class dashboard extends javax.swing.JFrame {
             }
         ));
         tblDataSiswa.setShowGrid(false);
+        tblDataSiswa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDataSiswaMouseClicked(evt);
+            }
+        });
         scrDataSiswa.setViewportView(tblDataSiswa);
 
         tFotoPath.setText("jLabel34");
@@ -1495,7 +1563,7 @@ public class dashboard extends javax.swing.JFrame {
         pnlOutputSiswaLayout.setVerticalGroup(
             pnlOutputSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlOutputSiswaLayout.createSequentialGroup()
-                .addComponent(scrDataSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrDataSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tFotoPath))
         );
@@ -1517,7 +1585,7 @@ public class dashboard extends javax.swing.JFrame {
             .addGroup(pnlBawahSiswaLayout.createSequentialGroup()
                 .addComponent(tombolSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlOutputSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlOutputSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1849,87 +1917,106 @@ public class dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblDataGuruMouseClicked
 
-    void comboJurusan(){
+    void comboJurusan() {
         try {
             String sql = "SELECT * FROM jurusan";
-            
+
             Connection con = koneksi.konek();
-            
+
             Statement statement = con.createStatement();
-            
+
             ResultSet resultSet = statement.executeQuery(sql);
-            
+
             while (resultSet.next()) {
                 cJurusanKelas.addItem(resultSet.getString("nama_jur"));
             }
         } catch (SQLException sQLException) {
-            
+
         }
         cJurusanKelas.setSelectedItem(null);
     }
-    
-        void comboWali(){
+
+    void comboWali() {
         try {
             String sql = "SELECT * FROM guru";
-            
+
             Connection con = koneksi.konek();
-            
+
             Statement statement = con.createStatement();
-            
+
             ResultSet resultSet = statement.executeQuery(sql);
-            
+
             while (resultSet.next()) {
                 cWaliKelas.addItem(resultSet.getString("nama_guru"));
             }
         } catch (SQLException sQLException) {
-            
+
         }
         cWaliKelas.setSelectedItem(null);
     }
-    
-    String KodeJurusan(String NamaJurusan){
+
+    void comboKelas() {
+        try {
+            String sql = "SELECT * FROM kelas";
+
+            Connection con = koneksi.konek();
+
+            Statement statement = con.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                cWaliKelas.addItem(resultSet.getString("id_kelas"));
+            }
+        } catch (SQLException sQLException) {
+
+        }
+        cKelasSiswa.setSelectedItem(null);
+    }
+
+    String KodeJurusan(String NamaJurusan) {
         try {
             String sql = "SELECT * FROM jurusan WHERE nama_jur = ?";
-            
+
             Connection con = koneksi.konek();
-            
+
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setString(1, NamaJurusan);
-            
+
             ResultSet resultSet = ps.executeQuery(sql);
-            
+
             while (resultSet.next()) {
                 return resultSet.getString("kode_jur");
             }
         } catch (SQLException sQLException) {
             return "";
-            
+
         }
         return "";
     }
-        
-    String NIP (String NamaGuru){
+
+    String NIP(String NamaGuru) {
         try {
             String sql = "SELECT * FROM guru WHERE nama_guru = ?";
-            
+
             Connection con = koneksi.konek();
-            
+
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setString(1, NamaGuru);
-            
+
             ResultSet resultSet = ps.executeQuery(sql);
-            
+
             while (resultSet.next()) {
                 return resultSet.getString("nip");
             }
         } catch (SQLException sQLException) {
-            
+
         }
-          return "";
+        return "";
     }
-    
+
     private void cJenisKelaminGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisKelaminGuruActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cJenisKelaminGuruActionPerformed
@@ -1959,7 +2046,7 @@ public class dashboard extends javax.swing.JFrame {
 
         try {
             String sql = "INSERT INTO guru(nip, nama_guru, gender, alamat) VALUES (?,?,?,?)";
-            
+
             Connection con = koneksi.konek();
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -2048,22 +2135,22 @@ public class dashboard extends javax.swing.JFrame {
         String Tingkatan = tblDataKelas.getValueAt(barisYangDipilih, 2).toString();
         String Jurusan = tblDataKelas.getValueAt(barisYangDipilih, 3).toString();
         String WaliKelas;
-        
-        if (tblDataKelas.getValueAt(barisYangDipilih, 4)!= null){
-            WaliKelas= tblDataKelas.getValueAt(barisYangDipilih,4).toString();
+
+        if (tblDataKelas.getValueAt(barisYangDipilih, 4) != null) {
+            WaliKelas = tblDataKelas.getValueAt(barisYangDipilih, 4).toString();
         } else {
-            WaliKelas=null;
+            WaliKelas = null;
         }
-        
+
         tKodeKelas.setText(KodeKelas);
         tKodeKelas.setEditable(false);
-        
+
         tNamaKelas.setText(NamaKelas);
-        
+
         cTingkatanKelas.setSelectedItem(Tingkatan);
-        
+
         cJurusanKelas.setSelectedItem(Jurusan);
-        
+
         cWaliKelas.setSelectedItem(WaliKelas);
 
     }//GEN-LAST:event_tblDataKelasMouseClicked
@@ -2077,16 +2164,15 @@ public class dashboard extends javax.swing.JFrame {
         String Tingkatan = cTingkatanKelas.getSelectedItem().toString();
 
         String Jurusan = KodeJurusan(cJurusanKelas.getSelectedItem().toString());
-        
+
         String WaliKelas = NIP(cWaliKelas.getSelectedItem().toString());
 
-
         try {
-            
+
             String sql = "INSERT INTO kelas(id_kelas, nama_kelas, tingkatan, kode_jur, nip_wali_kelas) VALUES (?,?,?,?,?)";
-            
+
             Connection con = koneksi.konek();
-            
+
             PreparedStatement statement = con.prepareStatement(sql);
             //apa bedanya ps dan statement?
             statement.setString(1, KodeKelas);
@@ -2095,7 +2181,7 @@ public class dashboard extends javax.swing.JFrame {
             statement.setString(4, Jurusan);
             statement.setString(5, WaliKelas);
             statement.execute();
-            
+
             JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
         } catch (SQLException sQLException) {
             JOptionPane.showMessageDialog(null, "Data gagal disimpan!");
@@ -2113,9 +2199,8 @@ public class dashboard extends javax.swing.JFrame {
         String Tingkatan = cTingkatanKelas.getSelectedItem().toString();
 
         String Jurusan = KodeJurusan(cJurusanKelas.getSelectedItem().toString());
-        
-        String WaliKelas = NIP(cWaliKelas.getSelectedItem().toString());
 
+        String WaliKelas = NIP(cWaliKelas.getSelectedItem().toString());
 
         String sql = "UPDATE kelas SET nama_kelas=?, tingkatan=?, kode_jur=?, nip_wali_kelas=?, WHERE id_kelas=?";
 
@@ -2173,7 +2258,124 @@ public class dashboard extends javax.swing.JFrame {
         //ini juga di luar try, apa bedanya???
     }//GEN-LAST:event_btnHapusSiswaActionPerformed
 
-    
+    private void tblDataSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataSiswaMouseClicked
+        // TODO add your handling code here:
+        // Mengambil indeks baris yang diklik pada tabel siswa
+        int baris = tblDataSiswa.rowAtPoint(evt.getPoint());
+
+// Mengambil nilai dari kolom pertama (NIS) pada baris yang diklik dan mengubah ke String
+        String nis = tblDataSiswa.getValueAt(baris, 0).toString();
+
+// Mengambil nilai dari kolom kedua (Nama Siswa)
+        String namaSiswa = tblDataSiswa.getValueAt(baris, 1).toString();
+
+// Mengambil objek dari kolom ketiga (Jenis Kelamin)
+        Object jkObj = tblDataSiswa.getValueAt(baris, 2);
+
+// Mengambil objek dari kolom keempat (Tempat Lahir)
+        Object tempatObj = tblDataSiswa.getValueAt(baris, 3);
+
+// Mengambil objek dari kolom kelima (Tanggal Lahir)
+        Object tglObj = tblDataSiswa.getValueAt(baris, 4);
+
+// Mengambil objek dari kolom keenam (Kelas)
+        Object kelasObj = tblDataSiswa.getValueAt(baris, 5);
+
+// Mengambil objek dari kolom ketujuh (Nomor HP)
+        Object hpObj = tblDataSiswa.getValueAt(baris, 6);
+
+// Menampilkan nilai NIS pada field input dan membuatnya tidak bisa diubah
+        tNIS.setText(nis);
+        tNIS.setEditable(false);
+
+// Menampilkan nama siswa ke field input
+        tNamaSiswa.setText(namaSiswa);
+
+// Mengonversi objek menjadi string, jika null maka hasilnya null atau string kosong
+        String jenisKelamin = (jkObj != null) ? jkObj.toString() : null;
+        String tempatLahir = (tempatObj != null) ? tempatObj.toString() : "";
+        String tglLahir = (tglObj != null) ? tglObj.toString() : null;
+        String idKelas = (kelasObj != null) ? kelasObj.toString() : null;
+        String noHP = (hpObj != null) ? hpObj.toString() : "";
+
+// Menampilkan tempat lahir, no HP, dan memilih kelas sesuai data
+        tTempatLahirSiswa.setText(tempatLahir);
+        tNomorHPSiswa.setText(noHP);
+        cKelasSiswa.setSelectedItem(idKelas);
+
+// Jika tanggal lahir tidak null dan tidak kosong, ubah ke format Date dan tampilkan di komponen kalender
+        if (tglLahir != null && !tglLahir.isEmpty()) {
+            try {
+                tTanggalLahirSiswa.setDate(java.sql.Date.valueOf(tglLahir));
+            } catch (IllegalArgumentException e) {
+                // Jika gagal parsing tanggal, kosongkan field tanggal
+                tTanggalLahirSiswa.setDate(null);
+            }
+        } else {
+            tTanggalLahirSiswa.setDate(null);
+        }
+
+// Konversi kode jenis kelamin ke bentuk tampilan yang dipahami pengguna
+        switch (jenisKelamin) {
+            case "L":
+                cJenisKelaminSiswa.setSelectedItem("Laki - laki");
+                break;
+            case "P":
+                cJenisKelaminSiswa.setSelectedItem("Perempuan");
+                break;
+            default:
+                cJenisKelaminSiswa.setSelectedItem(null);
+                break;
+        }
+
+        try {
+            // Query untuk mengambil data alamat dan foto berdasarkan NIS
+            String sql = "SELECT alamat, foto FROM siswa WHERE nis = ?";
+
+            // Membuka koneksi ke database
+            Connection conn = koneksi.konek();
+
+            // Menyiapkan statement SQL dengan parameter
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            // Mengisi parameter dengan NIS
+            ps.setString(1, nis);
+
+            // Menjalankan query dan menyimpan hasilnya
+            ResultSet rs = ps.executeQuery();
+
+            // Jika data ditemukan
+            if (rs.next()) {
+                // Mengambil alamat dan foto dari hasil query
+                String alamat = rs.getString("alamat");
+                String foto = rs.getString("foto");
+
+                // Menampilkan alamat ke field input
+                tAlamatSiswa.setText(alamat);
+
+                // Jika path foto tidak kosong, tampilkan gambar ke label foto
+                if (foto != null && !foto.isEmpty()) {
+                    ImageIcon icon = new ImageIcon(foto);
+                    Image image = icon.getImage().getScaledInstance(tFotoSiswa.getWidth(), tFotoSiswa.getHeight(), Image.SCALE_SMOOTH);
+                    tFotoPath.setText(foto);
+                    tFotoSiswa.setText(null);
+                    tFotoSiswa.setIcon(new ImageIcon(image));
+                } else {
+                    // Jika tidak ada foto, set teks "Foto" dan hapus icon
+                    tFotoSiswa.setText("Foto");
+                    tFotoSiswa.setIcon(null);
+                }
+            }
+        } catch (SQLException e) {
+            // Menampilkan error ke konsol jika terjadi kesalahan SQL
+            System.err.println(e.getMessage());
+        }
+    }//GEN-LAST:event_tblDataSiswaMouseClicked
+
+    private void tFotoSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tFotoSiswaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tFotoSiswaMouseClicked
+
     /**
      * @param args the command line arguments
      */
