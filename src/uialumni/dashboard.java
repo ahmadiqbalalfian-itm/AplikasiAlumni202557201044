@@ -2374,6 +2374,40 @@ public class dashboard extends javax.swing.JFrame {
 
     private void tFotoSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tFotoSiswaMouseClicked
         // TODO add your handling code here:
+        try {
+            JFileChooser chooser = new JFileChooser();
+            
+            int result = chooser.showOpenDialog(null);
+            
+            if (result == JFileChooser.APPROVE_OPTION) {
+                
+                File file = chooser.getSelectedFile();
+                
+                if (file != null) {
+                    
+                    ImageIcon icon = new ImageIcon(file.toString());
+                    
+                    Image image = icon.getImage().getScaledInstance(
+                            tFotoSiswa.getWidth(),
+                            tFotoSiswa.getHeight(),
+                            Image.SCALE_SMOOTH
+                    );
+                    
+                    ImageIcon ic = new ImageIcon(image);
+                    
+                    tFotoSiswa.setText(null);
+                    
+                    tFotoSiswa.setIcon(ic);
+                    
+                    String filename = file.getAbsolutePath();
+                    tFotoPath.setText(filename);                    
+                }
+            } else {
+                System.out.println("Pemilihan file dibatalkan oleh pengguna.");
+            }
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Error Upload: " + e.getMessage());
+        }
     }//GEN-LAST:event_tFotoSiswaMouseClicked
 
     /**
