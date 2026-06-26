@@ -1508,6 +1508,11 @@ public class dashboard extends javax.swing.JFrame {
         btnUbahSiswa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-white-edit-20.png"))); // NOI18N
         btnUbahSiswa.setText("Ubah");
         btnUbahSiswa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUbahSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahSiswaActionPerformed(evt);
+            }
+        });
         tombolSiswa.add(btnUbahSiswa);
 
         btnHapusSiswa.setBackground(new java.awt.Color(255, 0, 0));
@@ -2262,8 +2267,26 @@ public class dashboard extends javax.swing.JFrame {
 
     private void btnHapusSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusSiswaActionPerformed
         // TODO add your handling code here:
-        String sql = "DELETE FROM kelas WHERE id_kelas=?";
+        String nis = tNIS.getText();
+        
+        String sql = "DELETE FROM siswa WHERE nis=?";
         //ini juga di luar try, apa bedanya???
+        
+        try {
+            Connection con = koneksi.konek();
+
+            PreparedStatement statement = con.prepareStatement(sql);
+
+            statement.setString(1, nis);
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+        } catch (SQLException sQLException) {
+
+            JOptionPane.showMessageDialog(null, "Gagal Menghapus Data");
+        }
+        load_tabel_siswa();
+        reset();
     }//GEN-LAST:event_btnHapusSiswaActionPerformed
 
     private void tblDataSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataSiswaMouseClicked
@@ -2548,6 +2571,159 @@ public class dashboard extends javax.swing.JFrame {
 // Mengosongkan semua input form setelah data disimpan
         reset();
     }//GEN-LAST:event_btnTambahSiswaActionPerformed
+
+    private void btnUbahSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahSiswaActionPerformed
+        // TODO add your handling code here:
+        // Mengambil NIS dari field input
+        String nis = tNIS.getText();
+
+// Mengambil Nama Siswa dari field input
+        String namaSiswa = tNamaSiswa.getText();
+
+// Mengambil nilai dari combo box jenis kelamin dan mengubah menjadi String
+        String jenisKelamin = cJenisKelaminSiswa.getSelectedItem().toString();
+
+// Variabel untuk menyimpan kode jenis kelamin ('L' atau 'P')
+        String jK = null;
+
+// Mengambil Tempat Lahir dari field input
+        String tempatLahir = tTempatLahirSiswa.getText();
+
+// Mengambil tanggal lahir dari komponen kalender
+        Date tglLahirDate = tTanggalLahirSiswa.getDate();
+
+// Mengubah tanggal lahir menjadi format "yyyy-MM-dd"
+        String tglLahir = new SimpleDateFormat("yyyy-MM-dd").format(tglLahirDate);
+
+// Mengambil Nomor HP dari field input
+        String hp = tNomorHPSiswa.getText();
+
+// Mengambil Kelas dari combo box
+        String kelas = cKelasSiswa.getSelectedItem().toString();
+
+// Mengambil Alamat dari field input
+        String alamat = tAlamatSiswa.getText();
+
+// Mengambil path file foto dari field input tersembunyi
+        String filePath = tFotoPath.getText();
+
+// Mengonversi pilihan jenis kelamin ke kode (L/P)
+        switch (jenisKelamin) {
+            case "Laki - laki":
+                jK = "L";
+                break;
+            case "Perempuan":
+                jK = "P";
+                break;
+            default:
+                jK = null;
+                break;
+        }
+
+// Variabel untuk menyimpan path foto asli yang tersimpan di database
+        String fotoAsli = null;
+
+        try {
+            // Query untuk mengambil path foto berdasarkan NIS
+            String sql = "SELECT foto FROM siswa WHERE nis = ?";
+            Connection conn = koneksi.konek();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nis);
+            ResultSet rs = ps.executeQuery();
+
+            // Jika data ditemukan, simpan path foto ke variabel fotoAsli
+            if (rs.next()) {
+                fotoAsli = rs.getString("foto");
+            }
+        } catch (SQLException e) {
+            // Tampilkan pesan jika gagal mengambil foto dari database
+            JOptionPane.showMessageDialog(null, "Gagal mengambil foto asli: " + e.getMessage());
+        }
+
+// Menentukan apakah foto diubah oleh pengguna
+        boolean fotoDiubah = (fotoAsli == null && !filePath.isEmpty())
+                || (fotoAsli != null && !fotoAsli.equals(filePath));
+
+// Jika foto diubah, variabel 'foto' akan diisi dengan path baru
+        String foto = fotoAsli;
+
+        if (fotoDiubah) {
+            try {
+                // Ambil file dari path baru
+                File sourceFile = new File(filePath);
+
+                // Dapatkan ekstensi file
+                String extension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+                // Buat nama file baru berdasarkan waktu agar unik
+                String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                String destinationPath = "src/foto/foto-" + timestamp + "." + extension;
+
+                // Salin file ke folder tujuan
+                File destFile = new File(destinationPath);
+                Files.copy(sourceFile.toPath(), destFile.toPath());
+
+                // Simpan path tujuan ke variabel 'foto'
+                foto = destinationPath;
+
+            } catch (Exception e) {
+                // Tampilkan pesan jika gagal upload file
+                JOptionPane.showMessageDialog(null, "Gagal upload file: " + e.getMessage());
+            }
+        }
+
+        try {
+            // Query SQL berbeda tergantung apakah foto diubah atau tidak
+            String sql2;
+            if (fotoDiubah) {
+                sql2 = "UPDATE siswa SET nama_siswa=?, gender=?, tempat_lahir=?, "
+                        + "tgl_lahir=?, alamat=?, no_hp=?, id_kelas=?, foto=? WHERE nis=?";
+            } else {
+                sql2 = "UPDATE siswa SET nama_siswa=?, gender=?, tempat_lahir=?, "
+                        + "tgl_lahir=?, alamat=?, no_hp=?, id_kelas=? WHERE nis=?";
+            }
+
+            // Membuka koneksi ke database
+            Connection conn = koneksi.konek();
+
+            // Menyiapkan statement untuk eksekusi SQL
+            PreparedStatement statement = conn.prepareStatement(sql2);
+
+            // Menetapkan parameter umum
+            statement.setString(1, namaSiswa);
+            statement.setString(2, jK);
+            statement.setString(3, tempatLahir);
+            statement.setString(4, tglLahir);
+            statement.setString(5, alamat);
+            statement.setString(6, hp);
+            statement.setString(7, kelas);
+
+            // Jika foto diubah, tetapkan parameter tambahan
+            if (fotoDiubah) {
+                statement.setString(8, foto);
+                statement.setString(9, nis);
+            } else {
+                statement.setString(8, nis);
+            }
+
+            // Eksekusi perintah update
+            statement.execute();
+
+            // Tampilkan pesan sukses
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah!");
+
+        } catch (SQLException e) {
+            // Tampilkan pesan jika update gagal
+            JOptionPane.showMessageDialog(null, "Gagal memperbarui data: " + e.getMessage());
+        }
+
+// Muat ulang tabel agar perubahan terlihat
+        load_tabel_siswa();
+
+// Kosongkan form setelah proses selesai
+        reset();
+
+    }//GEN-LAST:event_btnUbahSiswaActionPerformed
 
     /**
      * @param args the command line arguments
