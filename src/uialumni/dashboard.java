@@ -1819,23 +1819,47 @@ public class dashboard extends javax.swing.JFrame {
         cJurusanKelas.setSelectedItem(null);
     }
     
-        void comboWali(){
+    String KodeJurusan(String NamaJurusan){
         try {
-            String sql = "SELECT * FROM guru";
+            String sql = "SELECT * FROM jurusan WHERE nama_jur = ?";
             
             Connection con = koneksi.konek();
             
-            Statement statement = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
             
-            ResultSet resultSet = statement.executeQuery(sql);
+            ps.setString(1, NamaJurusan);
+            
+            ResultSet resultSet = ps.executeQuery(sql);
             
             while (resultSet.next()) {
-                cJurusanKelas.addItem(resultSet.getString("nama_guru"));
+                return resultSet.getString("kode_jur");
+            }
+        } catch (SQLException sQLException) {
+            return "";
+            
+        }
+        return "";
+    }
+        
+    String NIP (String NamaGuru){
+        try {
+            String sql = "SELECT * FROM guru WHERE nama_guru = ?";
+            
+            Connection con = koneksi.konek();
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, NamaGuru);
+            
+            ResultSet resultSet = ps.executeQuery(sql);
+            
+            while (resultSet.next()) {
+                return resultSet.getString("nip");
             }
         } catch (SQLException sQLException) {
             
         }
-        cWaliKelas.setSelectedItem(null);
+          return "";
     }
     
     private void cJenisKelaminGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisKelaminGuruActionPerformed
