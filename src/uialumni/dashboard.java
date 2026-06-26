@@ -81,7 +81,7 @@ public class dashboard extends javax.swing.JFrame {
 
                 String kodeJurusan = rs.getString("kode_jur");
 
-                String namaJurusan = rs.getString("nama_jurusan");
+                String namaJurusan = rs.getString("nama_jur");
 
                 Object[] baris = {kodeJurusan, namaJurusan};
                 model.addRow(baris);
@@ -128,6 +128,51 @@ public class dashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Gagal mengambil data!");
         }
         tblDataGuru.setModel(model);
+    }
+    
+    void load_tabel_kelas() {
+
+        DefaultTableModel model = new DefaultTableModel();
+
+        model.addColumn("Kode Kelas");
+
+        model.addColumn("Nama Kelas");
+        
+        model.addColumn("Tingkatan");
+
+        model.addColumn("Jurusan");
+        
+        model.addColumn("Wali Kelas");
+
+        String sql = "SELECT k.id_kelas,k.nama_kelas,k.tingkatan,j.nama_jur,g.nama_guru"
+                +"FROM kelas k "
+                +"LEFT JOIN jurusan j ON k.kode_jur=j.kode_jur "
+                +"LEFT JOIN guru g ON k.nip_wali_kelas=g.nip ";
+
+        try {
+            Connection con = koneksi.konek();
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+
+                String kodeKelas = rs.getString("kode_kelas");
+
+                String namaKelas = rs.getString("nama_kelas");
+                String tingkatan = rs.getString("tingkatan");
+                String jurusan = rs.getString("nama_jur");
+                String waliKelas = rs.getString("nama_guru");
+                
+                Object[] baris = {kodeKelas, namaKelas, tingkatan, jurusan, waliKelas};
+                model.addRow(baris);
+            }
+
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Gagal mengambil data!");
+        }
+        tblDataKelas.setModel(model);
     }
 
     private void pindahKartu(String namaKartu) {
@@ -1100,6 +1145,11 @@ public class dashboard extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblDataKelas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDataKelasMouseClicked(evt);
+            }
+        });
         scrlDataKelas.setViewportView(tblDataKelas);
 
         javax.swing.GroupLayout pnlOutputKelasLayout = new javax.swing.GroupLayout(pnlOutputKelas);
@@ -1540,7 +1590,7 @@ public class dashboard extends javax.swing.JFrame {
 
         String namaJurusan = tNamaJurusan.getText();
 
-        String sql = "INSERT INTO jurusan(kode_jur, nama_jurusan) VALUES (?,?)";
+        String sql = "INSERT INTO jurusan(kode_jur, nama_jur) VALUES (?,?)";
 
         try {
             Connection con = koneksi.konek();
@@ -1665,7 +1715,7 @@ public class dashboard extends javax.swing.JFrame {
 
         String namaJurusan = tNamaJurusan.getText();
 
-        String sql = "UPDATE jurusan SET nama_jurusan=? WHERE kode_jur=?";
+        String sql = "UPDATE jurusan SET nama_jur=? WHERE kode_jur=?";
 
         try {
             Connection con = koneksi.konek();
@@ -1869,6 +1919,36 @@ public class dashboard extends javax.swing.JFrame {
         reset();
     }//GEN-LAST:event_btnHapusGuruActionPerformed
 
+    private void tblDataKelasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataKelasMouseClicked
+        // TODO add your handling code here:
+        int barisYangDipilih = tblDataKelas.rowAtPoint(evt.getPoint());
+
+        String KodeKelas = tblDataKelas.getValueAt(barisYangDipilih, 0).toString();
+        String NamaKelas = tblDataKelas.getValueAt(barisYangDipilih, 1).toString();
+        String Tingkatan = tblDataKelas.getValueAt(barisYangDipilih, 2).toString();
+        String Jurusan = tblDataKelas.getValueAt(barisYangDipilih, 3).toString();
+        String WaliKelas;
+        
+        if (tblDataKelas.getValueAt(barisYangDipilih, 4)!= null){
+            WaliKelas= tblDataKelas.getValueAt(barisYangDipilih,4).toString();
+        } else {
+            WaliKelas=null;
+        }
+        
+        tKodeKelas.setText(KodeKelas);
+        tKodeKelas.setEditable(false);
+        
+        tNamaKelas.setText(NamaKelas);
+        
+        cTingkatanKelas.setSelectedItem(Tingkatan);
+        
+        cJurusanKelas.setSelectedItem(Jurusan);
+        
+        cWaliKelas.setSelectedItem(WaliKelas);
+
+    }//GEN-LAST:event_tblDataKelasMouseClicked
+
+    
     /**
      * @param args the command line arguments
      */
