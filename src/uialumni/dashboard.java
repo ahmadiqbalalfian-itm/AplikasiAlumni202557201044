@@ -1186,6 +1186,11 @@ public class dashboard extends javax.swing.JFrame {
         btnTambahKelas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-white-plus-20.png"))); // NOI18N
         btnTambahKelas.setText("Tambah");
         btnTambahKelas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTambahKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahKelasActionPerformed(evt);
+            }
+        });
         tombolKelas.add(btnTambahKelas);
 
         btnUbahKelas.setBackground(new java.awt.Color(255, 153, 51));
@@ -1194,6 +1199,11 @@ public class dashboard extends javax.swing.JFrame {
         btnUbahKelas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-white-edit-20.png"))); // NOI18N
         btnUbahKelas.setText("Ubah");
         btnUbahKelas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUbahKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahKelasActionPerformed(evt);
+            }
+        });
         tombolKelas.add(btnUbahKelas);
 
         btnHapusKelas.setBackground(new java.awt.Color(255, 0, 0));
@@ -1202,6 +1212,11 @@ public class dashboard extends javax.swing.JFrame {
         btnHapusKelas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-remove-20.png"))); // NOI18N
         btnHapusKelas.setText("Hapus");
         btnHapusKelas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnHapusKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusKelasActionPerformed(evt);
+            }
+        });
         tombolKelas.add(btnHapusKelas);
 
         btnResetKelas.setBackground(new java.awt.Color(51, 102, 255));
@@ -2020,6 +2035,105 @@ public class dashboard extends javax.swing.JFrame {
         cWaliKelas.setSelectedItem(WaliKelas);
 
     }//GEN-LAST:event_tblDataKelasMouseClicked
+
+    private void btnTambahKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahKelasActionPerformed
+        // TODO add your handling code here:
+        String KodeKelas = tKodeKelas.getText();
+
+        String NamaKelas = tNamaKelas.getText();
+
+        String Tingkatan = cTingkatanKelas.getSelectedItem().toString();
+
+        String Jurusan = KodeJurusan(cJurusanKelas.getSelectedItem().toString());
+        
+        String WaliKelas = NIP(cWaliKelas.getSelectedItem().toString());
+
+
+        try {
+            
+            String sql = "INSERT INTO kelas(id_kelas, nama_kelas, tingkatan, kode_jur, nip_wali_kelas) VALUES (?,?,?,?,?)";
+            
+            Connection con = koneksi.konek();
+            
+            PreparedStatement statement = con.prepareStatement(sql);
+            //apa bedanya ps dan statement?
+            statement.setString(1, KodeKelas);
+            statement.setString(2, NamaKelas);
+            statement.setString(3, Tingkatan);
+            statement.setString(4, Jurusan);
+            statement.setString(5, WaliKelas);
+            statement.execute();
+            
+            JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "Data gagal disimpan!");
+        }
+        load_tabel_kelas();
+        reset();
+    }//GEN-LAST:event_btnTambahKelasActionPerformed
+
+    private void btnUbahKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahKelasActionPerformed
+        // TODO add your handling code here:
+        String KodeKelas = tKodeKelas.getText();
+
+        String NamaKelas = tNamaKelas.getText();
+
+        String Tingkatan = cTingkatanKelas.getSelectedItem().toString();
+
+        String Jurusan = KodeJurusan(cJurusanKelas.getSelectedItem().toString());
+        
+        String WaliKelas = NIP(cWaliKelas.getSelectedItem().toString());
+
+
+        String sql = "UPDATE kelas SET nama_kelas=?, tingkatan=?, kode_jur=?, nip_wali_kelas=?, WHERE id_kelas=?";
+
+        try {
+            Connection con = koneksi.konek();
+
+            PreparedStatement statement = con.prepareStatement(sql);
+
+            //apa bedanya ps dan statement?
+            statement.setString(1, KodeKelas);
+            statement.setString(2, NamaKelas);
+            statement.setString(3, Tingkatan);
+            statement.setString(4, Jurusan);
+            statement.setString(5, WaliKelas);
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah!");
+        } catch (SQLException sQLException) {
+
+            JOptionPane.showMessageDialog(null, "Data gagal diubah!");
+        }
+
+        load_tabel_kelas();
+
+        reset();
+    }//GEN-LAST:event_btnUbahKelasActionPerformed
+
+    private void btnHapusKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusKelasActionPerformed
+        // TODO add your handling code here:
+        String KodeKelas = tKodeKelas.getText();
+
+        String sql = "DELETE FROM kelas WHERE id_kelas=?";
+
+        try {
+            Connection con = koneksi.konek();
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, NIP);
+            ps.execute();
+
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+        } catch (SQLException sQLException) {
+
+            JOptionPane.showMessageDialog(null, "Data gagal dihapus!");
+        }
+        load_tabel_guru();
+        reset();
+
+    }//GEN-LAST:event_btnHapusKelasActionPerformed
 
     
     /**
