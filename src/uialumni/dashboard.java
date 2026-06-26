@@ -1787,15 +1787,15 @@ public class dashboard extends javax.swing.JFrame {
 
         switch (jenisKelaminGuru) {
             case "L":
-                cJenisKelaminGuru.getSelectedItem("Laki-Laki");
+                cJenisKelaminGuru.setSelectedItem("Laki-Laki");
                 break;
 
             case "P":
-                cJenisKelaminGuru.getSelectedItem("Perempuan");
+                cJenisKelaminGuru.setSelectedItem("Perempuan");
                 break;
 
             default:
-                cJenisKelaminGuru.getSelectedItem(null);
+                cJenisKelaminGuru.setSelectedItem(null);
                 break;
         }
     }//GEN-LAST:event_tblDataGuruMouseClicked
