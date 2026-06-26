@@ -10,13 +10,20 @@ import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-//jurusan
+//jurusan, guru, kelas
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
+//khususon siswa
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  *
@@ -62,6 +69,7 @@ public class dashboard extends javax.swing.JFrame {
         tAlamatSiswa.setText(null);
         tNomorHPSiswa.setText(null);
         tTempatLahirSiswa.setText(null);
+        tFotoPath.setText(null);
     }
 
     void load_tabel_jurusan() {
@@ -318,6 +326,7 @@ public class dashboard extends javax.swing.JFrame {
         pnlOutputSiswa = new javax.swing.JPanel();
         scrDataSiswa = new javax.swing.JScrollPane();
         tblDataSiswa = new javax.swing.JTable();
+        tFotoPath = new javax.swing.JLabel();
         cardAbout = new javax.swing.JPanel();
         atasAboutUs = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -1337,7 +1346,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tTanggalLahirSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         kontenSiswa.add(pnlInputSiswa1);
@@ -1398,7 +1407,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel31)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrAlamatSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                .addComponent(scrAlamatSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1456,8 +1465,6 @@ public class dashboard extends javax.swing.JFrame {
         });
         tombolSiswa.add(btnResetSiswa);
 
-        pnlOutputSiswa.setLayout(new java.awt.GridLayout(1, 0));
-
         tblDataSiswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -1472,7 +1479,26 @@ public class dashboard extends javax.swing.JFrame {
         tblDataSiswa.setShowGrid(false);
         scrDataSiswa.setViewportView(tblDataSiswa);
 
-        pnlOutputSiswa.add(scrDataSiswa);
+        tFotoPath.setText("jLabel34");
+
+        javax.swing.GroupLayout pnlOutputSiswaLayout = new javax.swing.GroupLayout(pnlOutputSiswa);
+        pnlOutputSiswa.setLayout(pnlOutputSiswaLayout);
+        pnlOutputSiswaLayout.setHorizontalGroup(
+            pnlOutputSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutputSiswaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlOutputSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tFotoPath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrDataSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnlOutputSiswaLayout.setVerticalGroup(
+            pnlOutputSiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlOutputSiswaLayout.createSequentialGroup()
+                .addComponent(scrDataSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tFotoPath))
+        );
 
         javax.swing.GroupLayout pnlBawahSiswaLayout = new javax.swing.GroupLayout(pnlBawahSiswa);
         pnlBawahSiswa.setLayout(pnlBawahSiswaLayout);
@@ -2283,6 +2309,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrlDataKelas;
     private javax.swing.JTextArea tAlamatGuru;
     private javax.swing.JTextArea tAlamatSiswa;
+    private javax.swing.JLabel tFotoPath;
     private javax.swing.JLabel tFotoSiswa;
     private javax.swing.JLabel tJumlahGuru;
     private javax.swing.JLabel tJumlahJurusan;
