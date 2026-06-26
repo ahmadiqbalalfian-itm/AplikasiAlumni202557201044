@@ -890,7 +890,7 @@ public class dashboard extends javax.swing.JFrame {
                     .addComponent(btnResetJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(scrlDataJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         cardJurusan.add(bawahJurusan, java.awt.BorderLayout.CENTER);
@@ -1495,6 +1495,11 @@ public class dashboard extends javax.swing.JFrame {
         btnTambahSiswa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-white-plus-20.png"))); // NOI18N
         btnTambahSiswa.setText("Tambah");
         btnTambahSiswa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTambahSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahSiswaActionPerformed(evt);
+            }
+        });
         tombolSiswa.add(btnTambahSiswa);
 
         btnUbahSiswa.setBackground(new java.awt.Color(255, 153, 51));
@@ -2379,31 +2384,31 @@ public class dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             JFileChooser chooser = new JFileChooser();
-            
+
             int result = chooser.showOpenDialog(null);
-            
+
             if (result == JFileChooser.APPROVE_OPTION) {
-                
+
                 File file = chooser.getSelectedFile();
-                
+
                 if (file != null) {
-                    
+
                     ImageIcon icon = new ImageIcon(file.toString());
-                    
+
                     Image image = icon.getImage().getScaledInstance(
                             tFotoSiswa.getWidth(),
                             tFotoSiswa.getHeight(),
                             Image.SCALE_SMOOTH
                     );
-                    
+
                     ImageIcon ic = new ImageIcon(image);
-                    
+
                     tFotoSiswa.setText(null);
-                    
+
                     tFotoSiswa.setIcon(ic);
-                    
+
                     String filename = file.getAbsolutePath();
-                    tFotoPath.setText(filename);                    
+                    tFotoPath.setText(filename);
                 }
             } else {
                 System.out.println("Pemilihan file dibatalkan oleh pengguna.");
@@ -2412,6 +2417,137 @@ public class dashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error Upload: " + e.getMessage());
         }
     }//GEN-LAST:event_tFotoSiswaMouseClicked
+
+    private void btnTambahSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahSiswaActionPerformed
+        // TODO add your handling code here:
+        // Mengambil teks dari field NIS
+        String nis = tNIS.getText();
+
+// Mengambil teks dari field Nama Siswa
+        String namaSiswa = tNamaSiswa.getText();
+
+// Mengambil item yang dipilih dari combo box jenis kelamin dan mengubahnya menjadi string
+        String jenisKelamin = cJenisKelaminSiswa.getSelectedItem().toString();
+
+// Variabel untuk menyimpan hasil konversi jenis kelamin (L/P)
+        String jK = null;
+
+// Mengambil teks dari field Tempat Lahir
+        String tempatLahir = tTempatLahirSiswa.getText();
+
+// Mengambil tanggal dari komponen kalender
+        Date tglLahirDate = tTanggalLahirSiswa.getDate();
+
+// Mengubah tanggal lahir menjadi format "yyyy-MM-dd"
+        String tglLahir = new SimpleDateFormat("yyyy-MM-dd").format(tglLahirDate);
+
+// Mengambil teks dari field nomor HP
+        String hp = tNomorHPSiswa.getText();
+
+// Mengambil item yang dipilih dari combo box kelas
+        String kelas = cKelasSiswa.getSelectedItem().toString();
+
+// Mengambil teks dari field alamat
+        String alamat = tAlamatSiswa.getText();
+
+// Mengambil path file dari label path foto
+        String filePath = tFotoPath.getText();
+
+// Konversi jenis kelamin dari teks menjadi kode (L atau P)
+        switch (jenisKelamin) {
+            case "Laki - laki":
+                jK = "L";
+                break;
+            case "Perempuan":
+                jK = "P";
+                break;
+            default:
+                jK = null;
+                break;
+        }
+
+// Variabel untuk menyimpan path file foto tujuan
+        String foto = null;
+
+// Mengecek apakah ada path file foto yang dipilih
+        if (filePath.length() != 0) {
+            try {
+                // Menyimpan path sumber file
+                String sourcePath = filePath;
+                File sourceFile = new File(sourcePath);
+
+                // Menentukan folder tujuan untuk menyimpan foto
+                String destinationFolderPath = "src/foto/";
+                File destinationFolder = new File(destinationFolderPath);
+
+                // Jika folder tujuan belum ada, buat folder tersebut
+                if (!destinationFolder.exists()) {
+                    destinationFolder.mkdir();
+                }
+
+                // Mengambil ekstensi file (contoh: jpg, png, dll)
+                String extension = sourcePath.substring(sourcePath.lastIndexOf('.') + 1);
+
+                // Membuat nama file baru yang unik berdasarkan timestamp
+                String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                String destinationFileName = "foto-" + timestamp + "." + extension;
+
+                // Membuat file tujuan dengan path dan nama file baru
+                File destinationFile = new File(destinationFolderPath + destinationFileName);
+
+                // Menyalin file dari sumber ke tujuan
+                Files.copy(sourceFile.toPath(), destinationFile.toPath());
+
+                // Menyimpan path foto yang telah dipindahkan
+                foto = destinationFile.getPath();
+
+            } catch (Exception e) {
+                // Menampilkan pesan error jika gagal mengupload file
+                JOptionPane.showMessageDialog(null, "Gagal upload file: " + e.getMessage());
+            }
+        } else {
+            // Jika tidak ada file yang dipilih, set null
+            foto = null;
+        }
+
+        try {
+            // Query SQL untuk menyimpan data siswa ke database
+            String sql = "INSERT INTO siswa(nis,nama_siswa,gender,tempat_lahir,tgl_lahir,alamat,no_hp,id_kelas,foto)"
+                    + " VALUES(?,?,?,?,?,?,?,?,?)";
+
+            // Membuka koneksi ke database
+            Connection conn = koneksi.konek();
+
+            // Menyiapkan statement SQL dengan parameter
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            // Mengisi nilai parameter satu per satu
+            statement.setString(1, nis);
+            statement.setString(2, namaSiswa);
+            statement.setString(3, jK);
+            statement.setString(4, tempatLahir);
+            statement.setString(5, tglLahir);
+            statement.setString(6, alamat);
+            statement.setString(7, hp);
+            statement.setString(8, kelas);
+            statement.setString(9, foto);
+
+            // Menjalankan query penyimpanan
+            statement.execute();
+
+            // Menampilkan pesan bahwa data berhasil disimpan
+            JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
+        } catch (SQLException e) {
+            // Menampilkan pesan jika terjadi kesalahan saat menyimpan data
+            JOptionPane.showMessageDialog(null, "Data gagal disimpan!");
+        }
+
+// Memuat ulang data siswa ke tabel
+        load_tabel_siswa();
+
+// Mengosongkan semua input form setelah data disimpan
+        reset();
+    }//GEN-LAST:event_btnTambahSiswaActionPerformed
 
     /**
      * @param args the command line arguments
