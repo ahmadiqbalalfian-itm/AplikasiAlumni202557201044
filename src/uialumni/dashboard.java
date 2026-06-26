@@ -1819,7 +1819,24 @@ public class dashboard extends javax.swing.JFrame {
         cJurusanKelas.setSelectedItem(null);
     }
     
-    
+        void comboWali(){
+        try {
+            String sql = "SELECT * FROM guru";
+            
+            Connection con = koneksi.konek();
+            
+            Statement statement = con.createStatement();
+            
+            ResultSet resultSet = statement.executeQuery(sql);
+            
+            while (resultSet.next()) {
+                cJurusanKelas.addItem(resultSet.getString("nama_guru"));
+            }
+        } catch (SQLException sQLException) {
+            
+        }
+        cJurusanKelas.setSelectedItem(null);
+    }
     
     private void cJenisKelaminGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisKelaminGuruActionPerformed
         // TODO add your handling code here:
