@@ -1800,6 +1800,27 @@ public class dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblDataGuruMouseClicked
 
+    void comboJurusan(){
+        try {
+            String sql = "SELECT * FROM jurusan";
+            
+            Connection con = koneksi.konek();
+            
+            Statement statement = con.createStatement();
+            
+            ResultSet resultSet = statement.executeQuery(sql);
+            
+            while (resultSet.next()) {
+                cJurusanKelas.addItem(resultSet.getString("nama_jur"));
+            }
+        } catch (SQLException sQLException) {
+            
+        }
+        cJurusanKelas.setSelectedItem(null);
+    }
+    
+    
+    
     private void cJenisKelaminGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisKelaminGuruActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cJenisKelaminGuruActionPerformed
