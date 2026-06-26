@@ -148,10 +148,10 @@ public class dashboard extends javax.swing.JFrame {
         
         model.addColumn("Wali Kelas");
 
-        String sql = "SELECT k.id_kelas,k.nama_kelas,k.tingkatan,j.nama_jur,g.nama_guru"
-                +"FROM kelas k "
-                +"LEFT JOIN jurusan j ON k.kode_jur=j.kode_jur "
-                +"LEFT JOIN guru g ON k.nip_wali_kelas=g.nip ";
+        String sql = "SELECT k.id_kelas,k.nama_kelas,k.tingkatan,j.nama_jur,g.nama_guru "
+                +" FROM kelas k "
+                +" LEFT JOIN jurusan j ON k.kode_jur=j.kode_jur "
+                +" LEFT JOIN guru g ON k.nip_wali_kelas=g.nip";
 
         try {
             Connection con = koneksi.konek();
@@ -162,8 +162,7 @@ public class dashboard extends javax.swing.JFrame {
 
             while (rs.next()) {
 
-                String kodeKelas = rs.getString("kode_kelas");
-
+                String kodeKelas = rs.getString("id_kelas");
                 String namaKelas = rs.getString("nama_kelas");
                 String tingkatan = rs.getString("tingkatan");
                 String jurusan = rs.getString("nama_jur");
