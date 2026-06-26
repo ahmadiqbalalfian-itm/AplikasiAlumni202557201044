@@ -2126,17 +2126,17 @@ public class dashboard extends javax.swing.JFrame {
             //sementara ini kok taruh di dalam try?
             Connection con = koneksi.konek();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement statement = con.prepareStatement(sql);
 
-            ps.setString(1, NIP);
-            ps.execute();
+            statement.setString(1, KodeKelas);
+            statement.execute();
 
             JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
         } catch (SQLException sQLException) {
 
             JOptionPane.showMessageDialog(null, "Data gagal dihapus!");
         }
-        load_tabel_guru();
+        load_tabel_kelas();
         reset();
 
     }//GEN-LAST:event_btnHapusKelasActionPerformed
