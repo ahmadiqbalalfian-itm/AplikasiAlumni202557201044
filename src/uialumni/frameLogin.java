@@ -5,8 +5,15 @@
 package uialumni;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.mysql.cj.jdbc.PreparedStatementWrapper;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+        
 
 /**
  *
@@ -174,8 +181,43 @@ public class frameLogin extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        dispose();
-        new dashboard().setVisible(true);
+        String username = tUsername.getText();
+        
+        String password = tPassword.getText();
+        
+        if (username.length() != 0 && password.length() != 0){
+            try{
+                
+                String sql = "SELECT * FROM user WHERE username=? AND password=md5(?)";
+                
+                Connection con = koneksi.konek();
+                
+                PreparedStatement ps = con.prepareStatement(sql);
+                
+                ps.setString(1, username);
+                
+                ps.setString(2, password);
+                
+                ResultSet rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    
+                    dispose();
+                    new dashboard().setVisible(true);                    
+                } else {
+                    
+                    JOptionPane.showMessageDialog(null, "Username/password salah");
+                }
+            }catch (SQLException sQLException){
+                
+                JOptionPane.showMessageDialog(null, sQLException.getMessage());
+            }
+        } else {
+            
+            JOptionPane.showMessageDialog(null, "Username/password tidak boleh kosong");
+        }
+        
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
@@ -188,10 +230,12 @@ public class frameLogin extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 //         */
         try {
-            UIManager.put("Button.arc", 15);
-            UIManager.put("TextComponent.arc", 15);
-            UIManager.put("Button.borderWidth", 0);
-            UIManager.put("Component.borderWidth", 0);
+            UIManager.put("Button.arc", 15);//mengatur sudut lengkung tombol
+            UIManager.put("Button.borderWidth", 0);//menghilangkan garis tepi tombol
+            
+            UIManager.put("TextComponent.arc", 15);//mengatur sudut lengkung textField dan label
+            
+            UIManager.put("Component.borderWidth", 0); 
             UIManager.put("Component.focusWidth", 0);
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
