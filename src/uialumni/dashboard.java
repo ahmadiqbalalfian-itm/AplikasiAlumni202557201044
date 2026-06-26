@@ -35,6 +35,10 @@ public class dashboard extends javax.swing.JFrame {
         load_tabel_jurusan();
 
         load_tabel_guru();
+        
+        load_tabel_kelas();
+        comboJurusan();
+        comboWali();
     }
 
     void reset() {
@@ -1817,6 +1821,25 @@ public class dashboard extends javax.swing.JFrame {
             
         }
         cJurusanKelas.setSelectedItem(null);
+    }
+    
+        void comboWali(){
+        try {
+            String sql = "SELECT * FROM guru";
+            
+            Connection con = koneksi.konek();
+            
+            Statement statement = con.createStatement();
+            
+            ResultSet resultSet = statement.executeQuery(sql);
+            
+            while (resultSet.next()) {
+                cWaliKelas.addItem(resultSet.getString("nama_guru"));
+            }
+        } catch (SQLException sQLException) {
+            
+        }
+        cWaliKelas.setSelectedItem(null);
     }
     
     String KodeJurusan(String NamaJurusan){
