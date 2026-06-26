@@ -1835,7 +1835,7 @@ public class dashboard extends javax.swing.JFrame {
         } catch (SQLException sQLException) {
             
         }
-        cJurusanKelas.setSelectedItem(null);
+        cWaliKelas.setSelectedItem(null);
     }
     
     private void cJenisKelaminGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJenisKelaminGuruActionPerformed
