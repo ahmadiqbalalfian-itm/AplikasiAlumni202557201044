@@ -51,6 +51,8 @@ public class dashboard extends javax.swing.JFrame {
 
         load_tabel_siswa();
         comboKelas();
+        
+        isiJumlahDataDasbor();
     }
 
     void reset() {
@@ -88,6 +90,50 @@ public class dashboard extends javax.swing.JFrame {
         tFotoPath.setIcon(null);
     }
 
+    private void isiJumlahDataDasbor(){
+        Connection con = koneksi.konek();
+        
+        try {
+            String sqlJurusan = "SELECT COUNT(*) AS jumlah FROM jurusan";
+            Statement psJurusan = con.createStatement();
+            ResultSet rsJurusan = psJurusan.executeQuery(sqlJurusan);
+            
+            if (rsJurusan.next()) {
+                int jumlah = rsJurusan.getInt("jumlah");
+                tJumlahJurusan.setText(String.valueOf(jumlah));
+            }
+            
+            String sqlGuru = "SELECT COUNT(*) AS jumlah FROM guru";
+            Statement psGuru = con.createStatement();
+            ResultSet rsGuru = psGuru.executeQuery(sqlGuru);
+            
+            if (rsGuru.next()) {
+                int jumlah = rsJurusan.getInt("jumlah");
+                tJumlahGuru.setText(String.valueOf(jumlah));
+            }
+            
+            String sqlSiswa = "SELECT COUNT(*) AS jumlah FROM siswa";
+            Statement psSiswa = con.createStatement();
+            ResultSet rsSiswa = psSiswa.executeQuery(sqlSiswa);
+            
+            if (rsSiswa.next()) {
+                int jumlah = rsSiswa.getInt("jumlah");
+                tJumlahSiswa.setText(String.valueOf(jumlah));
+            }
+            
+            String sqlKelas = "SELECT COUNT(*) AS jumlah FROM kelas";
+            Statement psKelas = con.createStatement();
+            ResultSet rsKelas = psKelas.executeQuery(sqlKelas);
+            
+            if (rsKelas.next()) {
+                int jumlah = rsKelas.getInt("jumlah");
+                tJumlahKelas.setText(String.valueOf(jumlah));
+            }
+        } catch (SQLException e) {
+            System.err.println("Gagal mengambil jumlah data");
+        }
+    }
+    
     void load_tabel_jurusan() {
 
         DefaultTableModel model = new DefaultTableModel();
