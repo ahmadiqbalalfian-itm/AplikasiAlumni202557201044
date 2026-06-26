@@ -1436,6 +1436,11 @@ public class dashboard extends javax.swing.JFrame {
         btnHapusSiswa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uialumni/img/icons8-remove-20.png"))); // NOI18N
         btnHapusSiswa.setText("Hapus");
         btnHapusSiswa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnHapusSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusSiswaActionPerformed(evt);
+            }
+        });
         tombolSiswa.add(btnHapusSiswa);
 
         btnResetSiswa.setBackground(new java.awt.Color(51, 102, 255));
@@ -1762,7 +1767,7 @@ public class dashboard extends javax.swing.JFrame {
         String kodeJurusan = tKodeJurusan.getText();
 
         String sql = "DELETE FROM jurusan WHERE kode_jur=?";
-
+        //nah ini juga diuar
         try {
             Connection con = koneksi.konek();
 
@@ -1928,7 +1933,7 @@ public class dashboard extends javax.swing.JFrame {
 
         try {
             String sql = "INSERT INTO guru(nip, nama_guru, gender, alamat) VALUES (?,?,?,?)";
-
+            
             Connection con = koneksi.konek();
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -1989,6 +1994,7 @@ public class dashboard extends javax.swing.JFrame {
         String NIP = tNIP.getText();
 
         String sql = "DELETE FROM guru WHERE nip=?";
+        //ini kenapa di luar try?
 
         try {
             Connection con = koneksi.konek();
@@ -2115,9 +2121,9 @@ public class dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         String KodeKelas = tKodeKelas.getText();
 
-        String sql = "DELETE FROM kelas WHERE id_kelas=?";
-
         try {
+            String sql = "DELETE FROM kelas WHERE id_kelas=?";
+            //sementara ini kok taruh di dalam try?
             Connection con = koneksi.konek();
 
             PreparedStatement ps = con.prepareStatement(sql);
@@ -2134,6 +2140,12 @@ public class dashboard extends javax.swing.JFrame {
         reset();
 
     }//GEN-LAST:event_btnHapusKelasActionPerformed
+
+    private void btnHapusSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusSiswaActionPerformed
+        // TODO add your handling code here:
+        String sql = "DELETE FROM kelas WHERE id_kelas=?";
+        //ini juga di luar try, apa bedanya???
+    }//GEN-LAST:event_btnHapusSiswaActionPerformed
 
     
     /**
